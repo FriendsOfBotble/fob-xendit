@@ -1,10 +1,42 @@
-### API docs:
+# Xendit payment gateway
 
-https://docs.xendit.co/integrations/libraries/php
+This plugin allows you to use Xendit as a payment gateway to process payments for your online store, allowing
+users to pay with their preferred payment method.
 
-### Key:
+![Xendit payment gateway](./screenshot.png)
 
-API Key: xnd_development_X1KRXlB2s6dC2QwHJ50LGltV5XRAjijvt0IrmRjMTN5nIc8eFgAagHgxOKnbtg
+## Installation
 
-Public Key: xnd_public_development_NpnzpgDpaPa2QC62iD5HkFeVEOByEs2aGgKqWPYyRStf0SmqeBVZk12NNRxWwumd
-# fob-xendit
+### Requirements
+
+* Botble core 7.0.0 or later.
+* **Ecommerce** & **Payment** plugins.
+
+### Install via Admin Panel
+
+Go to the **Admin Panel** and click on the **Plugins** tab. Click on the **Add new** button, find the **Xendit
+Payment Gateway** plugin and click on the **Install** button.
+
+### Install manually
+
+1. Download the plugin from
+   the [Botble Marketplace](https://marketplace.botble.com/products/friendsofbotble/fob-xendit).
+2. Extract the downloaded file and upload the extracted folder to the `platform/plugins` directory.
+3. Go to **Admin** > **Plugins** and click on the **Activate** button.
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+## Security
+
+If you discover any security related issues, please email friendsofbotble@gmail.com instead of using the issue tracker.
+
+## Credits
+
+* [Friends Of Botble](https://github.com/FriendsOfBotble)
+* [All Contributors](../../contributors)
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
