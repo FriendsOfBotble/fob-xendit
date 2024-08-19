@@ -5,12 +5,14 @@ namespace FriendsOfBotble\Xendit\Providers;
 use FriendsOfBotble\Xendit\Library\Invoice;
 use FriendsOfBotble\Xendit\Library\Xendit;
 use FriendsOfBotble\Xendit\Services\Gateways\XenditPaymentService;
-use Botble\Ecommerce\Models\Currency;
+use Botble\Ecommerce\Models\Currency as CurrencyEcommerce;
+use Botble\JobBoard\Models\Currency as CurrencyJobBoard;
 use Botble\Payment\Enums\PaymentMethodEnum;
 use Html;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Throwable;
 
 class HookServiceProvider extends ServiceProvider
@@ -123,7 +125,8 @@ class HookServiceProvider extends ServiceProvider
         $paymentData = apply_filters(PAYMENT_FILTER_PAYMENT_DATA, [], $request);
 
         if (strtoupper($currentCurrency->title) !== 'IDR') {
-            $supportedCurrency = Currency::query()->where('title', 'IDR')->first();
+            $currency = is_plugin_active('ecommerce') ? CurrencyEcommerce::class : CurrencyJobBoard::class;
+            $supportedCurrency = $currency::query()->where('title', 'IDR')->first();
 
             if ($supportedCurrency) {
                 $paymentData['currency'] = strtoupper($supportedCurrency->title);
@@ -145,6 +148,10 @@ class HookServiceProvider extends ServiceProvider
             Xendit::setApiKey(get_payment_setting('api_key', XENDIT_PAYMENT_METHOD_NAME));
 
             $checkoutToken = $paymentData['checkout_token'];
+
+            if (is_plugin_active('job-board')) {
+                $checkoutToken =  Str::uuid() . '-' . $checkoutToken;
+            }
 
             $params = [
                 'external_id' => $checkoutToken,

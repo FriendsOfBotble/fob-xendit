@@ -9,6 +9,7 @@ use Botble\Base\Http\Responses\BaseHttpResponse;
 use Botble\Payment\Enums\PaymentStatusEnum;
 use Botble\Payment\Supports\PaymentHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Throwable;
 
 class XenditController extends BaseController
@@ -26,6 +27,12 @@ class XenditController extends BaseController
 
             session()->forget('xendit_invoice_id');
 
+            $nextUrl = PaymentHelper::getRedirectURL($checkoutToken);
+
+            if (is_plugin_active('job-board')) {
+                $nextUrl = PaymentHelper::getRedirectURL(Str::of($checkoutToken)->afterLast('-')) . '?charge_id=' . $data['id'];
+            }
+
             if ($data['external_id'] == $checkoutToken) {
                 do_action(PAYMENT_ACTION_PAYMENT_PROCESSED, [
                     'amount' => $data['paid_amount'],
@@ -40,7 +47,7 @@ class XenditController extends BaseController
                 ], $request);
 
                 return $response
-                    ->setNextUrl(PaymentHelper::getRedirectURL($checkoutToken))
+                    ->setNextUrl($nextUrl)
                     ->setMessage(__('Checkout successfully!'));
             }
 
