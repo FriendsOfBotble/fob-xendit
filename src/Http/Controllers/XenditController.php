@@ -29,7 +29,7 @@ class XenditController extends BaseController
 
             $nextUrl = PaymentHelper::getRedirectURL($checkoutToken);
 
-            if (is_plugin_active('job-board')) {
+            if (is_plugin_active('job-board') || is_plugin_active('real-estate')) {
                 $nextUrl = PaymentHelper::getRedirectURL(Str::of($checkoutToken)->afterLast('-')) . '?charge_id=' . $data['id'];
             }
 

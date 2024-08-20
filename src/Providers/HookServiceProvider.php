@@ -7,6 +7,7 @@ use FriendsOfBotble\Xendit\Library\Xendit;
 use FriendsOfBotble\Xendit\Services\Gateways\XenditPaymentService;
 use Botble\Ecommerce\Models\Currency as CurrencyEcommerce;
 use Botble\JobBoard\Models\Currency as CurrencyJobBoard;
+use Botble\RealEstate\Models\Currency as CurrencyRealEstate;
 use Botble\Payment\Enums\PaymentMethodEnum;
 use Html;
 use Illuminate\Http\Request;
@@ -125,7 +126,13 @@ class HookServiceProvider extends ServiceProvider
         $paymentData = apply_filters(PAYMENT_FILTER_PAYMENT_DATA, [], $request);
 
         if (strtoupper($currentCurrency->title) !== 'IDR') {
-            $currency = is_plugin_active('ecommerce') ? CurrencyEcommerce::class : CurrencyJobBoard::class;
+            $currency = match (true) {
+                is_plugin_active('ecommerce') => CurrencyEcommerce::class,
+                is_plugin_active('job-board') => CurrencyJobBoard::class,
+                is_plugin_active('real-estate') => CurrencyRealEstate::class,
+                default => null,
+            };
+
             $supportedCurrency = $currency::query()->where('title', 'IDR')->first();
 
             if ($supportedCurrency) {
@@ -149,7 +156,7 @@ class HookServiceProvider extends ServiceProvider
 
             $checkoutToken = $paymentData['checkout_token'];
 
-            if (is_plugin_active('job-board')) {
+            if (is_plugin_active('job-board') || is_plugin_active('real-estate')) {
                 $checkoutToken =  Str::uuid() . '-' . $checkoutToken;
             }
 
