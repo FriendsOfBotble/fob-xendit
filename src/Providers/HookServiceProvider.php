@@ -8,6 +8,7 @@ use FriendsOfBotble\Xendit\Services\Gateways\XenditPaymentService;
 use Botble\Ecommerce\Models\Currency as CurrencyEcommerce;
 use Botble\JobBoard\Models\Currency as CurrencyJobBoard;
 use Botble\RealEstate\Models\Currency as CurrencyRealEstate;
+use Botble\Hotel\Models\Currency as CurrencyHotel;
 use Botble\Payment\Enums\PaymentMethodEnum;
 use Html;
 use Illuminate\Http\Request;
@@ -130,6 +131,7 @@ class HookServiceProvider extends ServiceProvider
                 is_plugin_active('ecommerce') => CurrencyEcommerce::class,
                 is_plugin_active('job-board') => CurrencyJobBoard::class,
                 is_plugin_active('real-estate') => CurrencyRealEstate::class,
+                is_plugin_active('hotel') => CurrencyHotel::class,
                 default => null,
             };
 

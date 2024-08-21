@@ -2,6 +2,7 @@
 
 namespace FriendsOfBotble\Xendit\Http\Controllers;
 
+use Botble\Hotel\Models\Booking;
 use FriendsOfBotble\Xendit\Library\Invoice;
 use FriendsOfBotble\Xendit\Library\Xendit;
 use Botble\Base\Http\Controllers\BaseController;
@@ -9,6 +10,7 @@ use Botble\Base\Http\Responses\BaseHttpResponse;
 use Botble\Payment\Enums\PaymentStatusEnum;
 use Botble\Payment\Supports\PaymentHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -45,6 +47,22 @@ class XenditController extends BaseController
                     'payment_type' => 'direct',
                     'order_id' => $orderIds,
                 ], $request);
+
+                if (is_plugin_active('hotel')) {
+                    $booking = Booking::query()
+                        ->select('transaction_id')
+                        ->find(Arr::first($orderIds));
+
+                    if (! $booking) {
+                        return $response
+                            ->setNextUrl(PaymentHelper::getCancelURL())
+                            ->setMessage(__('Checkout failed!'));
+                    }
+
+                    return $response
+                        ->setNextUrl(PaymentHelper::getRedirectURL($booking->transaction_id))
+                        ->setMessage(__('Checkout successfully!'));
+                }
 
                 return $response
                     ->setNextUrl($nextUrl)
