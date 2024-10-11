@@ -1,5 +1,5 @@
 {
-    "id": "friendsofbotble/xendit",
+    "id": "friendsofbotble/fob-xendit",
     "name": "Xendit Payment Gateway",
     "namespace": "FriendsOfBotble\\Xendit\\",
     "provider": "FriendsOfBotble\\Xendit\\Providers\\XenditServiceProvider",
